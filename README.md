@@ -1,3 +1,4 @@
+
 # Ansible
 
 Ansible par la pratique, les exercices réalisés seront disponible ici au fur et a mesure de l'avancement.
@@ -5,10 +6,34 @@ Ansible par la pratique, les exercices réalisés seront disponible ici au fur e
 
 # Atelier réalisé
 
-[Ansible par la pratique (3) – Installation](##Installation)
+[Installation exo1](authentification/exercice1)
 
+[Installation exo2](authentification/exercice2)
 
-## Installation
+[Installation exo3](authentification/exercice3)
 
-### Exercices réalisés
+[Authentification](##Authentification)
 
+[Direnv](direnv/exercice1)
+
+[Configuration de base](configuration_de_base/exercice)
+
+[Commandes Ad-hoc](commandes_ad_hoc/exercice)
+
+[Idempotence](idempotence/exercice)
+
+[Playbooks](playbook/exercice)
+
+[Un serveur web simple](un_serveur_web_simple/exercice)
+
+[Handler](handler/exercice)
+
+[Variables](variables/exercice)
+
+[Variables enregistrées](variables_enregistrees/exercice)
+
+[Facts et variables implicites](facts_et_variables_implicites/exercice)
+
+[Cibles hétérogènes](cibles_heterogenes/exercice)
+
+[Jinja et templates](jinja_et_templates/exercice)
