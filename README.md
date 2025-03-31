@@ -6,11 +6,11 @@ Ansible par la pratique, les exercices réalisés seront disponible ici au fur e
 
 # Atelier réalisé
 
-[Installation exo1](authentification/exercice1)
+[Installation exo1](installation/exercice1)
 
-[Installation exo2](authentification/exercice2)
+[Installation exo2](installation/exercice2)
 
-[Installation exo3](authentification/exercice3)
+[Installation exo3](installation/exercice3)
 
 [Authentification](##Authentification)
 
