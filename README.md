@@ -16,7 +16,7 @@ Ansible par la pratique, les exercices réalisés seront disponible ici au fur e
 
 [Direnv](direnv/exercice1)
 
-[Configuration de base](configuration_de_base/exercice)
+[Configuration de base](configuration_de_base/exerice)
 
 [Commandes Ad-hoc](commandes_ad_hoc/exercice)
 
@@ -28,11 +28,11 @@ Ansible par la pratique, les exercices réalisés seront disponible ici au fur e
 
 [Handler](handler/exercice)
 
-[Variables](variables/exercice)
+[Variables](variables/exerice)
 
 [Variables enregistrées](variables_enregistrees/exercice)
 
-[Facts et variables implicites](facts_et_variables_implicites/exercice)
+[Facts et variables implicites](facts_et_variables_implicites/exerice)
 
 [Cibles hétérogènes](cibles_heterogenes/exercice)
 
