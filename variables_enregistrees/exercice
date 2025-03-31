@@ -1,0 +1,44 @@
+cd ~/formation-ansible/atelier-15
+vagrant up
+vagrant ssh ansible
+cd ansible/projets/ema/playbooks/
+nano command1.yml
+
+ansible-playbook command1.yml
+ansible-playbook command2.yml 
+ansible-playbook command3.yml
+
+nano kernel.yml
+## Contenu du fichier kernel.yml : 
+- hosts: all
+  tasks:
+    - name: Display kernel information
+      debug:
+        msg: "{{ ansible_kernel }}"
+...
+## avec le module var :
+    - name: Display kernel information (using var)
+      debug:
+        var: ansible_kernel
+...
+
+----------------------------------------------
+ansible-playbooks kernel.yml
+nano packages.yml
+## Contenu du fichier packages.yml :
+- hosts: 
+    - rocky
+    - suse
+  tasks:
+    - name: Display total number of installed RPM packages
+      debug:
+        msg: "Total number of installed RPM packages: {{ rpm_count.stdout }}"
+      register: rpm_count
+      command: rpm -qa | wc -l
+
+...
+--------------------------------------------------
+
+ansible-playbooks packages.yml
+exit
+vagrant destroy -f

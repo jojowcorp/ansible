@@ -1,0 +1,41 @@
+vagrant up
+vagrant ssh debian
+sudo apt update
+sudo apt install -y direnv
+echo 'eval "$(direnv hook bash)"' >> ~/.bashrc
+source ~/.bashrc
+mkdir -v monprojet
+cd monprojet
+pwd
+echo "export TESTVAR=Yatahongaga" > .envrc
+direnv allow
+echo $TESTVAR
+cd 
+echo $TESTVAR
+cd monprojet/
+echo $TESTVAR
+echo 'export ANSIBLE_CONFIG=$(expand_path ansible.cfg)' > .envrc 
+direnv allow
+echo $ANSIBLE_CONFIG
+mkdir -v sousrepertoire
+cd sousrepertoire/
+echo $ANSIBLE_CONFIG
+exit
+
+vagrant ssh rocky
+VERSION="2.35.0"
+sudo wget https://github.com/direnv/direnv/releases/download/v$VERSION/direnv.linux-amd64 \
+  -O /usr/local/bin/direnv
+sudo chmod 0755 /usr/local/bin/direnv
+echo 'eval "$(direnv hook bash)"' >> ~/.bashrc
+source ~/.bashrc
+mkdir test
+cd test/
+pwd
+echo "export TESTVAR=Yatahongaga" > .envrc
+direnv allow
+echo $TESTVAR
+cd 
+exit
+
+vagrant destroy -f

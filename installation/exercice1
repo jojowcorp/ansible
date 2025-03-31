@@ -1,0 +1,9 @@
+cd atelier-01
+vagrant up ubuntu
+vagrant ssh ubuntu
+sudo apt update
+apt search --names-only ansible
+sudo apt install ansible
+ansible --version
+exit
+vagrant destroy -f ubuntu

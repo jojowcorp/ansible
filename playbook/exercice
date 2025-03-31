@@ -1,0 +1,64 @@
+cd ~/formation-ansible/atelier-08
+vagrant up
+vagrant ssh ansible
+cd ansible/projets/ema/
+ls
+mkdir playbooks
+cd playbooks
+nano hello-ansible.yml
+
+## Contenu du fichier hello-ansible.yml
+---  # hello-ansible.yml
+
+- hosts: localhost
+
+  tasks:
+    - debug:
+        msg: Hello Ansible!
+
+...
+
+----------------------------------
+cd ..
+echo 'export ANSIBLE_CONFIG=$(expand_path ansible.cfg)' > .envrc 
+direnv allow
+pwd
+cd playbooks/
+ansible --version | head -n 2
+
+nano hello-all.yml
+## Contenu du fichier hello-all.yml
+---  # hello-all.yml
+
+- hosts: all
+
+  tasks:
+    - debug:
+        msg: Hello Ansible!
+
+...
+
+
+---------------------
+ansible-playbook hello-all.yml 
+exit
+vagrant halt suse
+vagrant ssh ansible
+cd ansible/projets/ema/playbooks/
+ansible-playbook hello-all.yml 
+vagrant ssh ansible
+cd ansible/projets/ema
+ansible all -m ping
+head -n 4 inventory
+## Contenu du fichier inventory :
+[testing]
+rocky
+debian
+suse
+
+
+----------------------
+cd playbooks/
+ansible all -m ping -f 1
+ansible-playbook hello-all.yml -f 1
+

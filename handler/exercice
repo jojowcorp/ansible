@@ -1,0 +1,167 @@
+cd ~/formation-ansible/atelier-11
+vagrant up
+vagrant ssh control
+cd ansible/projets/ema/
+cat inventory
+ansible debian -m ping
+cd playbooks/
+ansible-playbook apache-01.yml
+
+##On ajoute ceci au fichier apache-01.yml : 
+
+    - name: Configure redirect
+      copy:
+        dest: /etc/apache2/conf-available/redirect.conf
+        content: |
+          Redirect /start http://www.startpage.com
+    - name: Activate redirect
+      command:
+        cmd: a2enconf redirect
+        creates: /etc/apache2/conf-enabled/redirect.conf
+    - name: Reload Apache
+      service:
+        name: apache2
+        state: reloaded
+
+
+---------------------------------------------------
+
+ansible-playbook apache-01.yml --start-at-task="*redirect*"
+curl target01/start
+
+## On modifie le document apache-01.yml : 
+    - name: Configure redirect
+      copy:
+        dest: /etc/apache2/conf-available/redirect.conf
+        content: |
+          Redirect /start http://www.startpage.com
+      notify: Reload Apache
+
+  handlers:
+
+    - name: Reload Apache
+      service:
+        name: apache2
+        state: reloaded
+    - name: Configure redirect
+      copy:
+        dest: /etc/apache2/conf-available/redirect.conf
+        content: |
+          Redirect /start https://www.startpage.com
+      notify: Reload Apache
+
+-----------------------------------------
+
+## Notre fichier devient comme ceci : 
+
+---  # apache-01.yml
+
+- hosts: debian
+
+  tasks:
+
+    - name: Update package information
+      apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Install Apache
+      apt:
+        name: apache2
+
+    - name: Start & enable Apache
+      service:
+        name: apache2
+        state: started
+        enabled: true
+
+    - name: Install custom web page
+      copy:
+        dest: /var/www/html/index.html
+        mode: 0644
+        content: |
+          <!doctype html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <title>Test</title>
+            </head>
+            <body>
+              <h1>My first Ansible-managed website</h1>
+            </body>
+          </html>
+
+    - name: Configure redirect
+      copy:
+        dest: /etc/apache2/conf-available/redirect.conf
+        content: |
+          Redirect /start https://www.startpage.com
+      notify: Reload Apache
+
+    - name: Activate redirect
+      command:
+        cmd: a2enconf redirect
+        creates: /etc/apache2/conf-enabled/redirect.conf
+
+  handlers:
+
+    - name: Reload Apache
+      service:
+        name: apache2
+        state: reloaded
+
+...
+
+
+--------------------------------
+ansible-playbook apache-01.yml --start-at-task="*redirect*"
+
+exit
+vagrant destroy -f
+
+# Exercice :
+
+cd ~/formation-ansible/atelier-12
+vagrant up 
+vagrant ssh control
+cd ansible/projets/ema/
+cat inventory
+
+nano chrony.yml 
+## COntenu du fichier chrony.yml :
+
+--- chrony.yml
+- hosts: all
+  become: yes
+
+  tasks:
+
+    - name: Install chrony package
+      package:
+        name: chrony
+        state: present
+
+    - name: Start and enable chronyd service
+      systemd:
+        name: chronyd
+        state: started
+        enabled: yes
+
+    - name: Configure chrony
+      template:
+        src: chrony.conf.j2
+        dest: /etc/chrony.conf
+      notify: Restart chronyd
+
+    - name: Verify chrony configuration syntax
+      command: chronyc checkconf
+      changed_when: false
+
+  handlers:
+    - name: Restart chronyd
+      systemd:
+        name: chronyd
+        state: restarted
+
+...
+

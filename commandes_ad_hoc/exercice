@@ -1,0 +1,16 @@
+cd ~/formation-ansible/atelier-07
+vagrant up
+vagrant ssh ansible
+cd ansible/projets/ema/
+ls
+ansible all -m ping
+ansible all -m command -a "df -h /"
+ansible all -a "df -h /"
+ansible all -a "hostname" -o
+ansible all -m shell -a "ps -ef | wc -l" -o
+ansible all -m shell -a 'echo $RANDOM executable=/bin/bash' -o
+ansible all -m file -a "dest=/tmp/test state=directory"
+ansible all -m copy -a "src=/etc/passwd dest=/tmp/test2.txt"
+ansible all -m user -a "name=kevin shell=/bin/bash"
+ansible all -m package -a "name=cowsay"
+ansible all -m reboot

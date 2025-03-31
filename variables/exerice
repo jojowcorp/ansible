@@ -1,0 +1,163 @@
+cd ~/formation-ansible/atelier-13
+vagrant up
+vagrant ssh ansible
+cd ansible/projets/ema/playbooks/
+ansible-playbook vars1.yml 
+ansible-playbook vars1.yml -e color=red
+ansible-playbook vars1.yml -e color=red -e number=99
+ansible-playbook set_fact.yml 
+mkdir -v ~/ansible/projets/ema/group_vars
+nano all.yml
+## COntenu du fichier all.yml : 
+---  # group_vars/all.yml
+
+mycolor: white
+mynumber: 97
+
+...
+
+
+-------------------------------
+
+ansible-playbook vars2.yml 
+cat ../inventory
+nano ../group_vars/redhat_hosts.yml
+## Contenu du fichier redhat_hosts.yml
+---  # group_vars/redhat_hosts.yml
+
+mycolor: red
+
+...
+
+--------------------------------
+ansible-playbook vars2.yml
+mkdir -v ~/ansible/projets/ema/host_vars
+cd ../host_vars
+nano suse.yml
+## COntenu du fichier suse.yml : 
+---  # host_vars/suse.yml
+
+mycolor: green
+
+...
+----------------------------------
+cd ../playbooks
+ansible-playbook vars2.yml
+ansible-playbook prompting.yml 
+42
+test
+ansible-playbook prompting.yml -e var1=38 -e var2=zamooche
+ssh suse
+exit
+ansible-playbook assert.yml 
+ansible-playbook assert.yml -e hostname=sandbox
+exit
+vagrant destroy -f
+
+
+# Exercice
+cd ~/formation-ansible/atelier-14
+vagrant up
+vagrant ssh control
+cd ansible/projets/ema/
+ls -l
+nano myvars1.yml
+## COntenu du fichier myvars1.yml : 
+--- myvars1
+- hosts: localhost
+  vars:
+    mycar: "Porsche 911"
+    mybike: "Ducati Panigale V4"
+
+  tasks:
+    - name: Afficher ma voiture préférée
+      debug:
+        msg: "Ma voiture préférée est la {{ mycar }}"
+
+    - name: Afficher ma moto préférée
+      debug:
+        msg: "Ma moto préférée est la {{ mybike }}"
+...
+---------------------------------
+ansible-playbook myvars1.yml
+ansible-playbook myvars1.yml -e "mycar=Ferrari 488 GTB"
+ansible-playbook myvars1.yml -e "mycar=Lamborghini Aventador mybike=Honda CBR1000RR"
+nano myvars2.yml
+## Contenu du fichier myvars2.yml :
+--- myvars2
+- hosts: localhost
+
+  tasks:
+    - name: Définir les variables mycar et mybike
+      set_fact:
+        mycar: "Porsche 911"
+        mybike: "Ducati Panigale V4"
+
+    - name: Afficher ma voiture préférée
+      debug:
+        msg: "Ma voiture préférée est la {{ mycar }}"
+
+    - name: Afficher ma moto préférée
+      debug:
+        msg: "Ma moto préférée est la {{ mybike }}"
+...
+---------------------------------------
+ansible-playbook myvars2.yml -e "mycar=Lamborghini Aventador mybike=Honda CBR1000RR"
+nano myvars3.yml
+## COntenu du fichier myvars3.yml : 
+---
+- hosts: localhost
+
+  tasks:
+    - name: Afficher ma voiture préférée
+      debug:
+        msg: "Ma voiture préférée est la {{ mycar }}"
+
+    - name: Afficher ma moto préférée
+      debug:
+        msg: "Ma moto préférée est la {{ mybike }}"
+...
+-----------------
+nano group_vars/all.yml
+## COntenu du fichier all.yml : 
+# group_vars/all.yml
+mycar: "VW"
+mybike: "BMW"
+-------------------------------------
+ansible-playbook myvars3.yml
+nano group_vars/target02.yml
+## COntenu du fichier target02.yml :
+# host_vars/target02.yml
+mycar: "Mercedes"
+mybike: "Honda"
+---------------------------------------
+ansible-playbook myvars3.yml
+nano display_user.yml
+## Contenu du fichier display_user.yml :
+--- display_user
+- hosts: localhost
+  vars:
+    user: "microlinux"
+    password: "yatahongaga"
+
+  tasks:
+    - name: Saisir l'utilisateur
+      set_fact:
+        user: "{{ user | default('microlinux') }}"
+      no_log: true
+
+    - name: Saisir le mot de passe
+      set_fact:
+        password: "{{ password | default('yatahongaga') }}"
+      no_log: true
+      prompt: "Entrez le mot de passe"
+
+    - name: Afficher l'utilisateur et le mot de passe
+      debug:
+        msg: "Utilisateur: {{ user }}, Mot de passe: {{ password }}"
+...
+-----------------------------------
+ansible-playbook display_user.yml
+
+exit
+vagrant destroy -f 

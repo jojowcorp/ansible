@@ -1,0 +1,144 @@
+#Article
+vagrant up
+vagrant ssh ansible
+type ansible direnv
+ansible all -i debian,rocky,suse -m ping
+ls -l /etc/ansible/
+mkdir -pv ~/ansible/projets/ema
+cd $_
+ansible --version | head -n 2
+rpm -qif /etc/ansible/ansible.cfg | head -n 1
+touch ~/.ansible.cfg
+ansible --version | head -n 2
+cd ~/ansible/projets/ema/
+touch ansible.cfg
+ansible --version | head -n 2
+mkdir -v playbooks
+cd playbooks/
+pwd
+ansible --version | head -n 2
+echo "export ANSIBLE_CONFIG=$(expand_path ansible.cfg)" > ~/ansible/projets/ema/.envrc
+direnv allow
+pwd
+ansible --version | head -n 2
+cd playbooks/
+pwd
+ansible --version | head -n 2
+mkdir -v ~/logs
+## Dans le ficher ansible.cfg :
+[defaults]
+inventory = ./inventory
+log_path = ~/logs/ansible.log
+
+------------------
+ansible all -i rocky,debian,suse -m ping
+cat ~/logs/ansible.log
+
+nano ../inventory
+## A ajouter dans le fichier inventory :
+
+[testing]
+rocky
+debian
+suse
+
+[testing:vars]
+ansible_python_interpreter=/usr/bin/python3
+ansible_user=vagrant
+
+---------
+ansible all -m ping
+ansible all -a "head -n 1 /etc/shadow"
+
+## Modification du fichier inventory comme ceci : 
+[testing]
+rocky
+debian
+suse
+
+[testing:vars]
+ansible_python_interpreter=/usr/bin/python3
+ansible_user=vagrant
+ansible_become=yes
+
+-----------------
+
+ansible all -a "head -n 1 /etc/shadow"
+exit
+vagrant destroy -f
+
+#Exercice
+
+cd ../atelier-06
+vagrant up
+vagrant ssh control
+sudo apt update
+sudo apt upgrade
+sudo nano /etc/hosts
+## fichier /etc/hosts : 
+127.0.0.1 localhost
+127.0.1.1 vagrant
+127.0.2.1 control control
+192.168.56.10   control 
+192.168.56.20	target01
+192.168.56.30	target02
+192.168.56.40	target03
+
+------------------------
+ssh-keygen -t rsa
+ssh-copy-id vagrant@target01
+ssh-copy-id vagrant@target02
+ssh-copy-id vagrant@target03
+sudo apt install ansible
+ansible all -m ping
+mkdir monprojet
+cd monprojet
+touch ansible.cfg
+ansible --version | head -n 2
+export ANSIBLE_CONFIG=$(realpath ansible.cfg)
+ansible --version | head -n 2
+nano ansible.cfg
+## Dans le ficher ansible.cfg :
+[defaults]
+inventory = ./inventory
+log_path = ~/journal/ansible.log
+
+------------------
+mkdir ../journal
+touch ../journal/ansible.log
+
+## Dans le fichier inventory ajouter :
+[hosts]
+
+
+[hosts:vars]
+ansible_python_interpreter=/usr/bin/python3
+ansible_user=vagrant
+
+----------
+ansible all -m ping
+cat ~/journal/ansible.log
+
+## Ajouter dans le fichier inventory :
+[testlab]
+target01
+target02
+target03
+
+[testlab:vars]
+ansible_python_interpreter=/usr/bin/python3
+ansible_user=vagrant
+
+---------------------
+ansible all -m ping
+nano inventory
+
+## Ajouter dans le fichier inventory :
+ansible_become=yes
+
+
+--------
+ansible testlab -m command -a "head -n 1 /etc/shadow"
+exit
+vagrant destroy -f
+

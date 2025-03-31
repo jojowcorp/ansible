@@ -1,0 +1,32 @@
+cd ~/formation-ansible/atelier-03
+vagrant up
+vagrant status
+vagrant ssh control
+type ansible
+
+--> je recupère les ip de toutes les targets et je les ajoutes dans le fichier /etc/hosts comme ceci:
+
+127.0.0.1 localhost
+127.0.1.1 vagrant
+192.168.56.20   target01
+192.168.56.30   target02
+192.168.56.40   target03
+
+
+puis je lance la commande suivante:
+ansible all -i target01,target02,target03 -m ping
+
+mais j'ai toujours une erreur, pourquoi ? Car je n'ai pas créer de clef ssh du coup :
+ssh-keygen -t rsa
+
+Puis je copie ma clef sur l'ensemble des machines:
+
+ssh-copy-id vagrant@192.168.56.20
+ssh-copy-id vagrant@192.168.56.30
+ssh-copy-id vagrant@192.168.56.40
+
+Puis je lance la commande :
+
+ansible all -i target01,target02,target03 -m ping
+
+Et Path ! tout fonctionne ! :)

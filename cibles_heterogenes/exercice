@@ -1,0 +1,87 @@
+cd ~/formation-ansible/atelier-17
+vagrant up 
+vagrant ssh ansible
+nano chrony-01.yml : 
+
+- hosts: all
+  tasks:
+    - name: Install Chrony package (Debian)
+      apt:
+        name: chrony
+        state: present
+      when: ansible_distribution == 'Debian'
+
+    - name: Install Chrony package (Rocky Linux)
+      dnf:
+        name: chrony
+        state: present
+      when: ansible_distribution == 'Rocky'
+
+    - name: Install Chrony package (SUSE Linux)
+      zypper:
+        name: chrony
+        state: present
+      when: ansible_distribution == 'SUSE'
+
+    - name: Install Chrony package (Ubuntu)
+      apt:
+        name: chrony
+        state: present
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Configure Chrony
+      template:
+        src: chrony.conf.j2
+        dest: /etc/chrony.conf
+      notify: Restart Chrony service
+
+    - name: Start and enable Chrony service
+      systemd:
+        name: chronyd
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: Restart Chrony service
+      systemd:
+        name: chronyd
+        state: restarted
+...
+-------------------------------------------
+
+nano chrony-02.yml
+
+- hosts: all
+  vars:
+    chrony_package:
+      Debian: chrony
+      Rocky: chrony
+      SUSE: chrony
+      Ubuntu: chrony
+    chrony_service: chronyd
+    chrony_confdir: /etc/chrony.conf
+
+  tasks:
+    - name: Install Chrony package
+      package:
+        name: "{{ chrony_package[ansible_distribution] }}"
+        state: present
+
+    - name: Configure Chrony
+      template:
+        src: chrony.conf.j2
+        dest: "{{ chrony_confdir }}"
+      notify: Restart Chrony service
+
+    - name: Start and enable Chrony service
+      systemd:
+        name: "{{ chrony_service }}"
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: Restart Chrony service
+      systemd:
+        name: "{{ chrony_service }}"
+        state: restarted
+...

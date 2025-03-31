@@ -1,0 +1,20 @@
+cd ~/formation-ansible/atelier-07
+vagrant up
+vagrant ssh ansible
+cd ansible/projets/ema/
+ls
+ansible rocky -m user -a "name=greg shell=/bin/bash"
+ansible rocky -m user -a "name=greg shell=/bin/bash"
+
+ansible all -m package -a "name=tree state=present"
+ansible all -m package -a "name=git state=present"
+ansible all -m package -a "name=nmap state=present"
+
+ansible all -m package -a "name=tree state=absent"
+ansible all -m package -a "name=git state=absent"
+ansible all -m package -a "name=nmap state=absent"
+
+ansible all -m copy -a "src=/etc/fstab dest=/tmp/test3.txt"
+ansible all -m file -a "path=/tmp/test3.txt state=absent"
+
+ansible all -m shell -a "df -h / | awk 'NR==2 {print $5}'" 

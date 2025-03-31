@@ -1,0 +1,12 @@
+cd atelier-01
+vagrant up ubuntu
+vagrant ssh ubuntu
+sudo apt update
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt install ansible
+ansible --version
+--> ansible [core 2.17.9]
+--> version sans le PPA (Personal Package Archive): ansible 2.10.8
+
+exit
+vagrant destroy -f ubuntu

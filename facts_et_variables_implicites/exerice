@@ -1,0 +1,41 @@
+cd ~/formation-ansible/atelier-16
+vagrant up
+vagrant ssh ansible
+cd ansible/projets/ema/playbooks/
+ansible debian -m setup
+ansible debian -m setup | less
+ansible debian -m setup | wc -l
+ansible debian -m setup -a "filter=ansible_distribution*"
+ansible debian -m setup | head -n 12
+
+nano pkg-info.yml
+## COntenu du fichier pkg-info.yml : 
+- hosts: all
+  tasks:
+    - name: Display package manager
+      debug:
+        msg: "The package manager used is {{ ansible_pkg_mgr }}"
+...
+-----------------------------------------------------------
+nano python-info.yml
+## COntenu du fichier python-info.yml : 
+- hosts: all
+  tasks:
+    - name: Display Python version
+      debug:
+        msg: "The installed Python version is {{ ansible_python_version }}"
+...
+------------------------------------------------------------
+nano dns-info.yml :
+## Contenu du fichier dns-info.yml :
+- hosts: all
+  tasks:
+    - name: Display DNS servers
+      debug:
+        msg: "The DNS servers used are {{ ansible_dns.nameservers }}"
+...
+------------------------------------------------------------
+exit
+vagrant destroy -f
+
+
